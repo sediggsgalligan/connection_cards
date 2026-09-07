@@ -411,7 +411,7 @@ body {
   display: inline-flex; align-items: center; gap: 3px;
   font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
   text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
-  background: rgba(255,255,255,0.25); color: #fff; margin-left: auto;
+  background: var(--mango-4); color: var(--mango-11); margin-left: auto;
 }
 .q-card-body { padding: 16px 20px 20px; }
 .q-card-question { font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--text); }
@@ -429,7 +429,7 @@ body {
 }
 .q-action:hover { border-color: var(--blue-4); color: var(--text); }
 .q-action svg { width: 15px; height: 15px; }
-.q-action-select.active { background: var(--blue-6); color: #fff; border-color: var(--blue-6); }
+.q-action-select.active { background: var(--mango-4); color: var(--mango-11); border-color: var(--mango-4); }
 .q-action-discard:hover { border-color: var(--rasp-4); color: var(--rasp-7); }
 .q-action-done:hover { border-color: var(--green-4); color: var(--green-7); }
 
@@ -521,6 +521,41 @@ body {
   z-index: 100; transition: transform 0.3s ease; box-shadow: var(--shadow-lg);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Wrap-up */
+.wrapup-panel {
+  max-width: 540px; margin: 0 auto; text-align: center;
+}
+.wrapup-panel h2 {
+  font-size: 28px; font-weight: 800; margin: 40px 0 8px; text-wrap: balance;
+}
+.wrapup-panel p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; }
+.wrapup-panel textarea {
+  width: 100%; min-height: 120px; padding: 14px 16px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font); font-size: 15px; line-height: 1.5;
+  background: var(--bg-card); color: var(--text); resize: vertical; transition: border-color 0.2s;
+}
+.wrapup-panel textarea:focus {
+  outline: none; border-color: var(--blue-6); box-shadow: 0 0 0 3px rgba(27,144,255,0.15);
+}
+.wrapup-panel textarea::placeholder { color: var(--text-muted); }
+.wrapup-stats {
+  display: flex; gap: 16px; justify-content: center; margin: 24px 0;
+}
+.wrapup-stat {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 24px; text-align: center; min-width: 100px;
+}
+.wrapup-stat-num { font-size: 28px; font-weight: 900; color: var(--blue-7); }
+.wrapup-stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.wrapup-shared {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px; text-align: left;
+}
+.wrapup-shared-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.wrapup-shared-item { font-size: 14px; color: var(--text-secondary); padding: 8px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+.wrapup-shared-item:last-child { border-bottom: none; }
+.wrapup-shared-name { font-weight: 600; color: var(--text); }
 
 /* Decorative */
 .landing-deco { position: fixed; pointer-events: none; z-index: -1; opacity: 0.06; }
@@ -710,6 +745,28 @@ body {
         <button class="btn btn-ghost btn-sm" id="answered-toggle-btn" onclick="event.stopPropagation();toggleAnswered()">Show</button>
       </div>
       <div class="drawn-grid answered-grid" id="answered-grid" hidden></div>
+    </div>
+  </div>
+
+  <!-- Wrap-up Screen -->
+  <div id="screen-wrapup" class="screen">
+    <div class="wrapup-panel">
+      <div style="font-size:14px; font-weight:600; color:var(--green-6); letter-spacing:0.06em; text-transform:uppercase;">Activity Complete</div>
+      <h2>Great Conversations!</h2>
+      <p>Take a moment to reflect on the connections you've made.</p>
+      <div class="wrapup-stats" id="wrapup-stats"></div>
+      <div class="input-group" style="text-align:left;">
+        <label>Your Reflection</label>
+        <textarea id="wrapup-reflection" placeholder="What stood out to you? What did you learn about your colleagues?" maxlength="500"></textarea>
+      </div>
+      <div style="display:flex; gap:12px; justify-content:center; margin-top:16px;">
+        <button class="btn btn-primary" onclick="submitReflection()">Share Reflection</button>
+        <button class="btn btn-ghost" onclick="showScreen('game');renderGame()">Back to Board</button>
+      </div>
+      <div id="wrapup-reflections" class="wrapup-shared" hidden>
+        <div class="wrapup-shared-title">Reflections from the Group</div>
+        <div id="wrapup-reflections-list"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -957,12 +1014,16 @@ function selectCard(cardId) {
   const current = state.cardStates[cardId];
   if (current === 'selected') {
     delete state.cardStates[cardId];
+    const draw = state.drawnCards.find(d => d.cardId === cardId);
+    if (draw) delete draw.selectedBy;
   } else {
     state.cardStates[cardId] = 'selected';
+    const draw = state.drawnCards.find(d => d.cardId === cardId);
+    if (draw) draw.selectedBy = state.playerName;
   }
   saveGameState();
   if (room) {
-    try { room.emit('card-action', { roomCode: state.roomCode, cardId, action: state.cardStates[cardId] || 'active' }); } catch(e) {}
+    try { room.emit('card-action', { roomCode: state.roomCode, cardId, action: state.cardStates[cardId] || 'active', by: state.playerName }); } catch(e) {}
   }
   renderGame();
   if (state.focusedCard === cardId) renderFocusModal();
@@ -1366,13 +1427,12 @@ function renderCardHTML(draw, isCompleted) {
     '</div>' +
     '<div class="q-card-body"><div class="q-card-question">' + esc(draw.question) + '</div></div>' +
     '<div class="q-card-footer">' +
-      '<div class="q-card-drawn-by">Drawn by ' + esc(draw.drawnBy) + '</div>' +
+      '<div class="q-card-drawn-by">' + (isSelected ? 'Selected by ' + esc(draw.selectedBy || draw.drawnBy) : '') + '</div>' +
       '<div class="q-card-actions">' +
         (!isCompleted ?
           '<button class="q-action q-action-select ' + (isSelected ? 'active' : '') + '" onclick="event.stopPropagation();selectCard(\'' + draw.cardId + '\')" title="' + (isSelected ? 'Deselect' : 'Select') + '">' +
             (isSelected ? ICON_STAR_FILL : ICON_STAR) + '</button>' +
-          '<button class="q-action q-action-discard" onclick="event.stopPropagation();discardCard(\'' + draw.cardId + '\')" title="Discard">' + ICON_X + '</button>' +
-          '<button class="q-action q-action-done" onclick="event.stopPropagation();completeCard(\'' + draw.cardId + '\')" title="Mark as answered">' + ICON_CHECK + '</button>'
+          '<button class="q-action q-action-discard" onclick="event.stopPropagation();discardCard(\'' + draw.cardId + '\')" title="Discard">' + ICON_X + '</button>'
         :
           '<span class="answered-badge">' + ICON_CHECK + ' Answered</span>'
         ) +
@@ -1405,10 +1465,20 @@ function renderDrawnCards() {
   }
 
   const visible = [...selected.reverse(), ...active.reverse()];
-  if (visible.length === 0 && completed.length === 0 && discardedCount === 0) {
+  const hasHadCards = state.drawnCards.length > 0;
+  const tutorialDone = state.gameStep >= 2;
+  if (visible.length === 0 && !hasHadCards) {
     grid.innerHTML = '<div class="empty-state">' +
       '<div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.4"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8v8M8 12h8"/></svg></div>' +
       '<div class="empty-state-text">Click a card stack above to draw your first card</div></div>';
+  } else if (visible.length === 0 && tutorialDone) {
+    grid.innerHTML = '<div class="empty-state">' +
+      '<div class="empty-state-icon" style="font-size:40px;opacity:0.7;">&#127881;</div>' +
+      '<div class="empty-state-text" style="margin-bottom:16px;">All cards have been discussed!</div>' +
+      '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">' +
+        '<button class="btn btn-sm btn-secondary" onclick="state.gameStep=0;state.guideVisible=true;renderGame()">Draw More Cards</button>' +
+        '<button class="btn btn-sm btn-primary" onclick="showWrapUp()">Wrap Up &amp; Reflect</button>' +
+      '</div></div>';
   } else if (visible.length === 0) {
     grid.innerHTML = '<div class="empty-state"><div class="empty-state-text">All cards have been answered or discarded</div></div>';
   } else {
@@ -1436,9 +1506,8 @@ function renderDrawnCards() {
   }
 
   if (state.focusedCard) {
-    const stillExists = state.drawnCards.some(d => d.cardId === state.focusedCard &&
-      state.cardStates[d.cardId] !== 'discarded');
-    if (!stillExists) closeFocus();
+    const cs = state.cardStates[state.focusedCard];
+    if (cs === 'discarded' || cs === 'completed') closeFocus();
   }
 }
 
@@ -1509,8 +1578,14 @@ function setupRoomListeners() {
       } else if (d.cardId) {
         if (d.action === 'active') {
           delete state.cardStates[d.cardId];
+          const draw = state.drawnCards.find(c => c.cardId === d.cardId);
+          if (draw) delete draw.selectedBy;
         } else {
           state.cardStates[d.cardId] = d.action;
+          if (d.action === 'selected' && d.by) {
+            const draw = state.drawnCards.find(c => c.cardId === d.cardId);
+            if (draw) draw.selectedBy = d.by;
+          }
         }
       }
       if (state.screen === 'game') renderGame();
@@ -1530,6 +1605,53 @@ function setupRoomListeners() {
     if (state.screen === 'lobby') renderLobby();
     if (state.screen === 'game') renderGame();
   });
+}
+
+function showWrapUp() {
+  showScreen('wrapup');
+  const completedCount = Object.values(state.cardStates).filter(s => s === 'completed').length;
+  const discardedCount = Object.values(state.cardStates).filter(s => s === 'discarded').length;
+  const totalDrawn = state.drawnCards.length;
+  document.getElementById('wrapup-stats').innerHTML =
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + totalDrawn + '</div><div class="wrapup-stat-label">Cards Drawn</div></div>' +
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + completedCount + '</div><div class="wrapup-stat-label">Discussed</div></div>' +
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + discardedCount + '</div><div class="wrapup-stat-label">Discarded</div></div>';
+  loadReflections();
+}
+
+async function submitReflection() {
+  const text = document.getElementById('wrapup-reflection').value.trim();
+  if (!text) { showToast('Write a short reflection first'); return; }
+  if (!db || !state.roomCode) {
+    showToast('Reflection shared!');
+    document.getElementById('wrapup-reflection').value = '';
+    return;
+  }
+  try {
+    const key = 'ref-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+    await db.doc('reflections/' + state.roomCode + '/entries/' + key).set({
+      name: state.playerName, text: text, timestamp: Date.now()
+    });
+    document.getElementById('wrapup-reflection').value = '';
+    showToast('Reflection shared!');
+    loadReflections();
+  } catch(e) { console.warn('reflection save error', e); showToast('Reflection shared!'); }
+}
+
+async function loadReflections() {
+  if (!db || !state.roomCode) return;
+  try {
+    const snap = await db.collection('reflections/' + state.roomCode + '/entries').orderBy('timestamp', 'desc').limit(20).get();
+    const container = document.getElementById('wrapup-reflections');
+    const list = document.getElementById('wrapup-reflections-list');
+    if (snap.empty) { container.hidden = true; return; }
+    container.hidden = false;
+    list.innerHTML = '';
+    snap.forEach(doc => {
+      const d = doc.data();
+      list.innerHTML += '<div class="wrapup-shared-item"><span class="wrapup-shared-name">' + esc(d.name) + ':</span> ' + esc(d.text) + '</div>';
+    });
+  } catch(e) { console.warn('reflections load error', e); }
 }
 
 document.addEventListener('keydown', e => {
