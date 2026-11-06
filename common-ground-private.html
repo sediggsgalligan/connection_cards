@@ -1,0 +1,1576 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>Common Ground</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;0,900;1,400&display=swap">
+<style>
+:root {
+  --font: '72', 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --bg: #F4F6F9;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --text: #1A2744;
+  --text-secondary: #4A5568;
+  --text-muted: #8492A6;
+  --border: #E2E8F0;
+  --shadow: 0 2px 8px rgba(0,42,134,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,42,134,0.12);
+  --blue-2: #D1EFFF; --blue-4: #89D1FF; --blue-6: #1B90FF;
+  --blue-7: #0070F2; --blue-10: #002A86; --blue-11: #00144A;
+  --rasp-2: #FFDCE8; --rasp-4: #FEADC8; --rasp-6: #FA4F96;
+  --rasp-7: #DF1278; --rasp-10: #71014B; --rasp-11: #510136;
+  --mango-2: #FFF3B8; --mango-4: #FFC933; --mango-6: #E76500;
+  --mango-7: #C35500; --mango-10: #6D1900; --mango-11: #450B00;
+  --indigo-2: #E2D8FF; --indigo-4: #B894FF; --indigo-6: #7858FF;
+  --indigo-7: #5D36FF; --indigo-10: #1C0C6E; --indigo-11: #0E0637;
+  --green-2: #EBF5CB; --green-4: #97DD40; --green-6: #36A41D;
+  --green-7: #188918; --green-10: #164323; --green-11: #0E2B16;
+  --grey-6: #5B6F8B; --grey-7: #475E77;
+  --overlay: rgba(0,20,74,0.6);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1628;
+    --bg-card: #142038;
+    --bg-elevated: #1A2744;
+    --text: #E8ECF2;
+    --text-secondary: #A0B0C8;
+    --text-muted: #6B7D96;
+    --border: #253550;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+    --overlay: rgba(0,10,36,0.75);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1628;
+  --bg-card: #142038;
+  --bg-elevated: #1A2744;
+  --text: #E8ECF2;
+  --text-secondary: #A0B0C8;
+  --text-muted: #6B7D96;
+  --border: #253550;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+  --overlay: rgba(0,10,36,0.75);
+}
+
+* { box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+#app {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 24px clamp(20px, 4vw, 48px);
+  min-height: 100vh;
+}
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp 0.4s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cardEnter {
+  0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes cardExit {
+  to { opacity: 0; transform: scale(0.8); }
+}
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+  50% { transform: translateY(-8px) rotate(var(--rot, 0deg)); }
+}
+@keyframes scaleUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Landing */
+.landing-hero { text-align: center; padding: 32px 0 8px; }
+.landing-logo {
+  font-size: 14px; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+}
+.landing-title {
+  font-size: clamp(40px, 8vw, 64px); font-weight: 900; line-height: 1.05;
+  letter-spacing: -0.02em; margin: 0 0 16px; text-wrap: balance;
+  background: linear-gradient(135deg, var(--blue-7), var(--indigo-6));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.landing-subtitle {
+  font-size: 18px; color: var(--text-secondary);
+  max-width: 440px; margin: 0 auto 28px; line-height: 1.5;
+}
+.landing-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 32px; border: none; border-radius: var(--radius);
+  font-family: var(--font); font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s ease; text-decoration: none; white-space: nowrap;
+}
+.btn:focus-visible { outline: 3px solid var(--blue-4); outline-offset: 2px; }
+.btn:disabled { opacity: 0.45; pointer-events: none; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--blue-7), var(--blue-6));
+  color: #fff; box-shadow: 0 4px 12px rgba(0,112,242,0.3);
+}
+.btn-primary:hover { box-shadow: 0 6px 20px rgba(0,112,242,0.4); transform: translateY(-1px); }
+.btn-secondary {
+  background: var(--bg-elevated); color: var(--text); border: 1.5px solid var(--border);
+}
+.btn-secondary:hover { border-color: var(--blue-4); background: var(--bg-card); }
+.btn-sm { padding: 8px 18px; font-size: 14px; border-radius: var(--radius-sm); }
+.btn-ghost { background: none; border: none; color: var(--text-secondary); padding: 8px 16px; }
+.btn-ghost:hover { color: var(--text); background: var(--bg-elevated); }
+.btn-danger-outline {
+  background: none; color: var(--rasp-7); border: 1.5px solid var(--rasp-4);
+}
+.btn-danger-outline:hover { background: var(--rasp-2); }
+.btn-success {
+  background: var(--green-6); color: #fff; border: none;
+}
+.btn-success:hover { background: var(--green-7); }
+
+/* Form elements */
+.input-group { margin-bottom: 20px; }
+.input-group label {
+  display: block; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 6px;
+}
+.input-group input, .input-group select {
+  width: 100%; padding: 12px 16px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font); font-size: 16px;
+  background: var(--bg-card); color: var(--text); transition: border-color 0.2s;
+}
+.input-group input:focus, .input-group select:focus {
+  outline: none; border-color: var(--blue-6);
+  box-shadow: 0 0 0 3px rgba(27,144,255,0.15);
+}
+.input-group input::placeholder { color: var(--text-muted); }
+
+/* Panel */
+.panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 32px;
+  box-shadow: var(--shadow); max-width: 440px; margin: 0 auto;
+}
+.panel-title { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+.panel-desc { font-size: 15px; color: var(--text-secondary); margin: 0 0 24px; line-height: 1.5; }
+
+/* Toggle */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 0; border-top: 1px solid var(--border);
+}
+.toggle-label { font-size: 15px; font-weight: 600; }
+.toggle-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+.toggle {
+  width: 48px; height: 26px; background: var(--border); border-radius: 13px;
+  border: none; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.toggle.on { background: var(--blue-6); }
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; background: #fff; border-radius: 50%; transition: transform 0.2s;
+}
+.toggle.on::after { transform: translateX(22px); }
+
+/* Lobby */
+.lobby-header { text-align: center; margin-bottom: 20px; }
+.room-code-display {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--bg-elevated); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 12px 24px; margin-top: 16px;
+}
+.room-code-value {
+  font-size: 32px; font-weight: 900; letter-spacing: 0.15em;
+  font-variant-numeric: tabular-nums; color: var(--blue-7);
+}
+.copy-btn {
+  background: none; border: none; color: var(--text-muted);
+  cursor: pointer; padding: 4px; border-radius: 4px; transition: color 0.2s;
+}
+.copy-btn:hover { color: var(--blue-6); }
+.player-list { list-style: none; padding: 0; margin: 24px 0; }
+.player-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px;
+}
+.player-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.player-host {
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-muted); margin-left: auto;
+}
+
+/* Intro */
+.intro-wrap { max-width: 720px; margin: 0 auto; text-align: center; }
+.intro-step { display: none; animation: fadeUp 0.5s ease; }
+.intro-step.active { display: block; }
+.intro-step h2 { font-size: 28px; font-weight: 800; margin: 20px 0 16px; text-wrap: balance; }
+.intro-step p {
+  font-size: 16px; color: var(--text-secondary);
+  line-height: 1.6; max-width: 480px; margin: 0 auto 32px;
+}
+.intro-categories {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin: 24px 0 36px; text-align: left;
+}
+.intro-cat {
+  padding: 16px; border-radius: var(--radius); border-left: 4px solid;
+  background: var(--bg-elevated);
+}
+.intro-cat-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.intro-cat-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.intro-dots { display: flex; gap: 8px; justify-content: center; margin: 32px 0; }
+.intro-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--border);
+  border: none; cursor: pointer; transition: all 0.2s; padding: 0;
+}
+.intro-dot.active { background: var(--blue-6); width: 24px; border-radius: 4px; }
+.intro-flow { text-align: left; max-width: 420px; margin: 24px auto 36px; }
+.intro-flow-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.intro-flow-item:last-child { border-bottom: none; }
+.intro-flow-num {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  background: var(--blue-6); color: #fff;
+  font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.intro-flow-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.intro-flow-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+.intro-cat.cat-curiosity { border-left-color: var(--rasp-6); }
+.intro-cat.cat-charge { border-left-color: var(--mango-6); }
+.intro-cat.cat-transparency { border-left-color: var(--indigo-6); }
+.intro-cat.cat-win { border-left-color: var(--green-6); }
+
+/* Game Board */
+.game-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.game-title { font-size: 20px; font-weight: 700; }
+.game-players { display: flex; gap: -6px; align-items: center; }
+.game-player-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff;
+  border: 2px solid var(--bg); margin-left: -6px; position: relative;
+}
+.game-player-avatar:first-child { margin-left: 0; }
+.player-count-label { font-size: 13px; color: var(--text-muted); margin-left: 8px; }
+
+/* Guide Banner */
+.guide-banner {
+  background: var(--bg-card); border: 1.5px solid var(--blue-4);
+  border-radius: var(--radius-lg); padding: 20px 24px; margin-bottom: 24px;
+}
+.guide-pips { display: flex; gap: 6px; margin-bottom: 14px; }
+.guide-pip {
+  height: 4px; flex: 1; border-radius: 2px; background: var(--border);
+  transition: background 0.3s;
+}
+.guide-pip.active { background: var(--blue-6); }
+.guide-pip.done { background: var(--green-6); }
+.guide-step-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--blue-6); margin-bottom: 4px;
+}
+.guide-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.guide-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+.guide-progress {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;
+}
+.guide-progress-chip {
+  display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600;
+  padding: 4px 10px; background: var(--bg-elevated); border-radius: 6px;
+  border: 1px solid var(--border); transition: all 0.2s;
+}
+.guide-progress-chip.done { border-color: var(--green-6); color: var(--green-7); }
+.guide-progress-chip.warn { border-color: var(--mango-4); color: var(--mango-7); }
+.guide-progress-chip svg { width: 14px; height: 14px; }
+.guide-actions {
+  display: flex; gap: 8px; align-items: center; margin-top: 16px; flex-wrap: wrap;
+}
+
+/* Card Stacks */
+.stacks-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14px; margin-bottom: 28px;
+}
+@media (max-width: 520px) { .stacks-grid { grid-template-columns: repeat(2, 1fr); } }
+.stack {
+  position: relative; cursor: pointer; transition: transform 0.2s ease; perspective: 600px;
+}
+.stack:hover { transform: translateY(-4px); }
+.stack.empty { pointer-events: none; opacity: 0.5; }
+.stack-card {
+  height: clamp(130px, 17vw, 170px); border-radius: var(--radius);
+  position: relative; overflow: hidden; box-shadow: var(--shadow-lg);
+}
+.stack-card-bg {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 16px; text-align: center;
+}
+.stack-hexes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.stack-hex {
+  position: absolute; opacity: 0.15; animation: float 6s ease-in-out infinite;
+}
+.stack-hex svg { width: 100%; height: 100%; }
+.stack-cat-label {
+  font-size: clamp(10px, 2vw, 13px); font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.8); z-index: 1; margin-bottom: 8px;
+}
+.stack-title {
+  font-size: clamp(12px, 2.5vw, 15px); font-weight: 800;
+  color: #fff; z-index: 1; line-height: 1.2; text-wrap: balance;
+}
+.stack-count {
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7);
+  z-index: 1; margin-top: 8px;
+}
+.stack-border {
+  position: absolute; inset: 6px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: calc(var(--radius) - 4px); pointer-events: none;
+}
+.stack-card.cat-curiosity .stack-card-bg { background: linear-gradient(145deg, var(--rasp-7), var(--rasp-11)); }
+.stack-card.cat-charge .stack-card-bg { background: linear-gradient(145deg, var(--mango-7), var(--mango-11)); }
+.stack-card.cat-transparency .stack-card-bg { background: linear-gradient(145deg, var(--indigo-7), var(--indigo-11)); }
+.stack-card.cat-win .stack-card-bg { background: linear-gradient(145deg, var(--green-7), var(--green-11)); }
+
+/* Drawn Cards Area */
+.drawn-section { margin-top: 8px; }
+.drawn-section-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.drawn-section-title {
+  font-size: 15px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.drawn-section-line { flex: 1; height: 1px; background: var(--border); }
+.discard-count {
+  font-size: 12px; color: var(--text-muted); font-weight: 600;
+  padding: 3px 10px; border-radius: 12px; background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+.drawn-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 580px) { .drawn-grid { grid-template-columns: 1fr; } }
+
+/* Question Card */
+.q-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s;
+}
+.q-card:hover { box-shadow: var(--shadow-lg); }
+.q-card.q-card-enter { animation: cardEnter 0.4s ease; }
+.q-card.q-card-exit { animation: cardExit 0.3s ease forwards; pointer-events: none; }
+.q-card.selected { border-left: 4px solid var(--cat-primary, var(--blue-6)); }
+.q-card.phase-dim { opacity: 0.45; filter: grayscale(0.3); pointer-events: none; }
+.q-card-header {
+  padding: 10px 16px; display: flex; align-items: center; gap: 8px;
+}
+.q-card-cat {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.q-card-num { font-size: 13px; font-weight: 700; opacity: 0.8; }
+.q-card-team-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+  background: rgba(255,255,255,0.2); color: #fff; margin-left: auto;
+}
+.q-card-selected-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 4px;
+  background: var(--mango-4); color: var(--mango-11); margin-left: auto;
+}
+.q-card-body { padding: 16px 20px 20px; }
+.q-card-question { font-size: 16px; font-weight: 500; line-height: 1.5; color: var(--text); }
+.q-card-footer {
+  padding: 10px 16px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.q-card-drawn-by { font-size: 12px; color: var(--text-muted); }
+.q-card-actions { display: flex; gap: 4px; }
+.q-action {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border: 1.5px solid var(--border);
+  border-radius: 6px; background: var(--bg-elevated); color: var(--text-muted);
+  cursor: pointer; transition: all 0.15s; padding: 0;
+}
+.q-action:hover { border-color: var(--blue-4); color: var(--text); }
+.q-action svg { width: 15px; height: 15px; }
+.q-action-select.active {
+  background: var(--mango-4); color: var(--mango-11); border-color: var(--mango-4);
+}
+.q-action-discard:hover { border-color: var(--rasp-4); color: var(--rasp-7); }
+
+/* Category header colors */
+.q-card.cat-curiosity .q-card-header { background: linear-gradient(135deg, var(--rasp-6), var(--rasp-7)); color: #fff; }
+.q-card.cat-charge .q-card-header { background: linear-gradient(135deg, var(--mango-6), var(--mango-7)); color: #fff; }
+.q-card.cat-transparency .q-card-header { background: linear-gradient(135deg, var(--indigo-6), var(--indigo-7)); color: #fff; }
+.q-card.cat-win .q-card-header { background: linear-gradient(135deg, var(--green-6), var(--green-7)); color: #fff; }
+
+/* Category CSS custom properties */
+.cat-curiosity { --cat-light: var(--rasp-2); --cat-mid: var(--rasp-4); --cat-primary: var(--rasp-6); --cat-dark: var(--rasp-7); --cat-deep: var(--rasp-10); --cat-darkest: var(--rasp-11); }
+.cat-charge { --cat-light: var(--mango-2); --cat-mid: var(--mango-4); --cat-primary: var(--mango-6); --cat-dark: var(--mango-7); --cat-deep: var(--mango-10); --cat-darkest: var(--mango-11); }
+.cat-transparency { --cat-light: var(--indigo-2); --cat-mid: var(--indigo-4); --cat-primary: var(--indigo-6); --cat-dark: var(--indigo-7); --cat-deep: var(--indigo-10); --cat-darkest: var(--indigo-11); }
+.cat-win { --cat-light: var(--green-2); --cat-mid: var(--green-4); --cat-primary: var(--green-6); --cat-dark: var(--green-7); --cat-deep: var(--green-10); --cat-darkest: var(--green-11); }
+
+/* Completed / Answered section */
+.answered-section { margin-top: 32px; }
+.answered-section .drawn-section-header { cursor: pointer; }
+.answered-section .drawn-section-header:hover .drawn-section-title { color: var(--text-secondary); }
+.answered-grid .q-card { opacity: 0.65; }
+.answered-grid .q-card:hover { opacity: 0.85; }
+.answered-badge {
+  font-size: 12px; color: var(--green-7); font-weight: 600;
+  display: flex; align-items: center; gap: 4px;
+}
+.answered-badge svg { width: 14px; height: 14px; }
+
+/* Focus overlay */
+#focus-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: var(--overlay); display: flex;
+  align-items: center; justify-content: center; padding: 24px;
+  animation: fadeIn 0.2s ease;
+}
+#focus-overlay[hidden] { display: none !important; }
+.focus-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  max-width: 540px; width: 100%; box-shadow: var(--shadow-lg);
+  overflow: hidden; animation: scaleUp 0.25s ease; position: relative;
+}
+.focus-header {
+  padding: 18px 24px; position: relative; display: flex;
+  align-items: center; gap: 10px; color: #fff;
+}
+.focus-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.15); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; transition: background 0.2s; z-index: 1;
+}
+.focus-close:hover { background: rgba(255,255,255,0.3); }
+.focus-cat {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; opacity: 0.85;
+}
+.focus-num { font-size: 13px; font-weight: 700; opacity: 0.7; }
+.focus-team-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.2); margin-left: auto;
+}
+.focus-body { padding: 28px; }
+.focus-question {
+  font-size: 22px; font-weight: 500; line-height: 1.55; color: var(--text);
+}
+.focus-meta { font-size: 13px; color: var(--text-muted); margin-top: 16px; }
+.focus-actions {
+  padding: 16px 28px 24px;
+  display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border);
+}
+.focus-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 28px 20px; border-top: 1px solid var(--border);
+}
+.focus-nav-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg-elevated); color: var(--text-secondary);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.focus-nav-btn:hover { border-color: var(--blue-4); color: var(--text); }
+.focus-nav-btn:disabled { opacity: 0.35; pointer-events: none; }
+.focus-counter {
+  font-size: 13px; font-weight: 600; color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.focus-header.cat-curiosity { background: linear-gradient(135deg, var(--rasp-6), var(--rasp-7)); }
+.focus-header.cat-charge { background: linear-gradient(135deg, var(--mango-6), var(--mango-7)); }
+.focus-header.cat-transparency { background: linear-gradient(135deg, var(--indigo-6), var(--indigo-7)); }
+.focus-header.cat-win { background: linear-gradient(135deg, var(--green-6), var(--green-7)); }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); grid-column: 1 / -1; }
+.empty-state-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+.empty-state-text { font-size: 15px; line-height: 1.5; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--blue-11); color: #fff; padding: 12px 24px;
+  border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  z-index: 100; transition: transform 0.3s ease; box-shadow: var(--shadow-lg);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Wrap-up */
+.wrapup-panel { max-width: 540px; margin: 0 auto; text-align: center; }
+.wrapup-panel h2 {
+  font-size: 28px; font-weight: 800; margin: 40px 0 8px; text-wrap: balance;
+}
+.wrapup-panel p { font-size: 16px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; }
+.wrapup-panel textarea {
+  width: 100%; min-height: 120px; padding: 14px 16px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); font-family: var(--font); font-size: 15px; line-height: 1.5;
+  background: var(--bg-card); color: var(--text); resize: vertical; transition: border-color 0.2s;
+}
+.wrapup-panel textarea:focus {
+  outline: none; border-color: var(--blue-6); box-shadow: 0 0 0 3px rgba(27,144,255,0.15);
+}
+.wrapup-panel textarea::placeholder { color: var(--text-muted); }
+.wrapup-stats {
+  display: flex; gap: 16px; justify-content: center; margin: 24px 0; flex-wrap: wrap;
+}
+.wrapup-stat {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 16px 24px; text-align: center; min-width: 100px;
+}
+.wrapup-stat-num { font-size: 28px; font-weight: 900; color: var(--blue-7); }
+.wrapup-stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.wrapup-shared {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; margin-top: 24px; text-align: left;
+}
+.wrapup-shared-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+.wrapup-shared-item { font-size: 14px; color: var(--text-secondary); padding: 8px 0; border-bottom: 1px solid var(--border); line-height: 1.5; }
+.wrapup-shared-item:last-child { border-bottom: none; }
+.wrapup-shared-name { font-weight: 600; color: var(--text); }
+/* Brand */
+.brand-logo { display: block; height: 24px; width: auto; }
+.brandbar { padding: 0 0 20px; }
+.brandbar[hidden] { display: none; }
+.landing-brand { height: 40px; margin: 0 auto 20px; }
+
+/* About (landing) */
+.about {
+  max-width: 880px; margin: 40px auto 16px; padding-top: 28px;
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px 40px;
+}
+@media (max-width: 540px) { .about { grid-template-columns: 1fr; } }
+.about-title { font-size: 17px; font-weight: 700; margin: 0 0 10px; color: var(--text); }
+.about p { font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 12px; max-width: 60ch; }
+.about p strong { color: var(--text); font-weight: 600; }
+.about-source { font-size: 12px !important; color: var(--text-muted) !important; }
+
+/* How to play (lobby) */
+.howto-title { font-size: 18px; font-weight: 700; margin: 0 0 4px; }
+.howto { max-width: 760px; }
+.lobby-grid { display: grid; gap: 20px; max-width: 960px; margin: 0 auto 24px; }
+.lobby-grid .panel { margin: 0 auto; width: 100%; }
+@media (min-width: 860px) {
+  .lobby-grid { grid-template-columns: 280px 1fr; align-items: start; }
+  .lobby-grid .panel { max-width: none; }
+}
+.howto .intro-flow { margin: 8px 0 0; }
+.intro-flow.grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; max-width: 680px;
+}
+.intro-flow.grid .intro-flow-item { border-bottom: none; padding: 10px 0; }
+@media (max-width: 540px) { .intro-flow.grid { grid-template-columns: 1fr; } }
+.howto-note { font-size: 13px; color: var(--text-muted); margin: 12px 0 0; line-height: 1.5; }
+
+/* Discussion view */
+.focus-lead { font-size: 14px; color: var(--text-secondary); margin-top: 18px; line-height: 1.5; }
+.focus-lead strong { color: var(--text); font-weight: 600; }
+.focus-others { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+.focus-actions.discuss { justify-content: space-between; align-items: center; }
+.focus-nav-btn svg { width: 16px; height: 16px; }
+.focus-hint { font-size: 13px; color: var(--text-muted); line-height: 1.4; flex: 1 1 200px; }
+@media (prefers-reduced-motion: reduce) {
+  .screen.active, .focus-card, .q-card.q-card-enter, #focus-overlay { animation: none !important; }
+  .stack-hex { animation: none !important; }
+}
+
+/* ── Private-hands additions ─────────────────────────── */
+.setup-grid { display: grid; gap: 0 20px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 540px) { .setup-grid { grid-template-columns: 1fr; } }
+.code-row { display: flex; gap: 8px; align-items: stretch; }
+.code-row input { text-transform: uppercase; letter-spacing: 0.2em; font-weight: 800; font-size: 20px !important; text-align: center; }
+.code-row .btn { flex-shrink: 0; }
+.chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  min-width: 44px; height: 44px; padding: 0 12px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border); background: var(--bg-card); color: var(--text);
+  font-family: var(--font); font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+}
+.chip:hover { border-color: var(--blue-4); }
+.chip.active { background: var(--blue-7); border-color: var(--blue-7); color: #fff; }
+.chip:focus-visible { outline: 3px solid var(--blue-4); outline-offset: 2px; }
+.field-hint { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.45; }
+.deck-check {
+  display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 12px 16px;
+  border-radius: var(--radius-sm); background: var(--bg-elevated); border: 1.5px dashed var(--border);
+}
+.deck-check-name { font-size: 16px; font-weight: 800; }
+.deck-check-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+.deck-check-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.deck-check svg { flex-shrink: 0; }
+.resume-box { margin: 20px auto 0; text-align: center; font-size: 14px; color: var(--text-secondary); }
+.resume-box .btn { margin-top: 8px; }
+
+.game-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.meta-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border-radius: var(--radius-sm); background: var(--bg-card); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+}
+.meta-chip strong { color: var(--text); font-weight: 800; letter-spacing: 0.08em; }
+.turn-order { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.turn-seat {
+  width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; background: var(--bg-elevated); border: 1.5px solid var(--border); color: var(--text-secondary);
+}
+.turn-seat.me { background: var(--blue-7); border-color: var(--blue-7); color: #fff; }
+.turn-arrow { color: var(--text-muted); font-size: 12px; }
+
+.twist-meter { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+.twist-pip { width: 22px; height: 8px; border-radius: 4px; background: var(--border); }
+.twist-pip.on { background: linear-gradient(135deg, var(--indigo-6), var(--blue-6)); }
+
+.hand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+@media (max-width: 580px) { .hand-grid { grid-template-columns: 1fr; } }
+.hand-sub { font-size: 13px; color: var(--text-muted); margin: -8px 0 16px; }
+.q-play-hint { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.q-card:hover .q-play-hint { color: var(--blue-6); }
+
+/* Twist card */
+.t-card {
+  position: relative; overflow: hidden; cursor: pointer; border-radius: var(--radius);
+  background: linear-gradient(150deg, var(--blue-10), var(--indigo-11));
+  color: #fff; box-shadow: var(--shadow); transition: all 0.2s; min-height: 170px;
+  display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.08);
+}
+.t-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.t-card.q-card-enter { animation: cardEnter 0.4s ease; }
+.t-card-hexes { position: absolute; inset: 0; pointer-events: none; }
+.t-card-hexes span { position: absolute; opacity: 0.12; }
+.t-card-top { display: flex; align-items: center; gap: 8px; padding: 12px 16px 0; position: relative; }
+.t-card-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-4); display: inline-flex; gap: 6px; align-items: center; }
+.t-card-label svg { width: 14px; height: 14px; }
+.t-when {
+  margin-left: auto; font-size: 10px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px;
+}
+.t-when.turn { background: var(--blue-6); color: #fff; }
+.t-when.any { background: var(--mango-4); color: var(--mango-11); }
+.t-card-body { padding: 10px 16px 16px; position: relative; flex: 1; }
+.t-card-name { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.t-card-text { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.82); }
+.focus-header.twist { background: linear-gradient(135deg, var(--blue-10), var(--indigo-10)); }
+.focus-twist-name { font-size: 26px; font-weight: 800; margin-bottom: 10px; color: var(--text); }
+.spot-label {
+  font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--blue-6); margin-bottom: 10px;
+}
+.spot-tips { margin: 18px 0 0; padding: 0; list-style: none; }
+.spot-tips li { font-size: 14px; color: var(--text-secondary); line-height: 1.5; padding: 4px 0 4px 22px; position: relative; }
+.spot-tips li::before { content: ''; position: absolute; left: 4px; top: 12px; width: 8px; height: 8px; border-radius: 2px; background: var(--blue-4); transform: rotate(45deg); }
+.timer {
+  display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 12px 16px;
+  border-radius: var(--radius-sm); background: var(--bg-elevated); border: 1px solid var(--border);
+}
+.timer-num { font-size: 32px; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--blue-7); min-width: 64px; }
+.timer-num.done { color: var(--rasp-7); }
+.howto-twists { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0 32px; text-align: left; }
+@media (max-width: 540px) { .howto-twists { grid-template-columns: 1fr; } }
+.howto-twists .t-card { cursor: default; min-height: 0; }
+.howto-twists .t-card:hover { transform: none; }
+.played-list .q-card, .played-list .t-card { opacity: 0.7; }
+.played-list .t-card { min-height: 0; }
+.wrap-actions { display: flex; gap: 12px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+.led-list { text-align: left; margin-top: 24px; }
+@media (prefers-reduced-motion: reduce) { .t-card, .t-card.q-card-enter { animation: none !important; transition: none !important; } }
+.focus-header { padding-right: 60px; }
+
+</style>
+<div id="app">
+  <header class="brandbar" id="brandbar" hidden>
+    <img class="brand-logo" src="data:image/png;base64,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" alt="SAP">
+  </header>
+
+  <!-- Landing / Setup -->
+  <div id="screen-landing" class="screen active">
+    <div class="landing-hero">
+      <img class="brand-logo landing-brand" src="data:image/png;base64,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" alt="SAP">
+      <h1 class="landing-title">Common Ground</h1>
+      <p class="landing-subtitle">A card game to build workplace connections</p>
+      <div class="landing-actions">
+        <button class="btn btn-primary" onclick="showSetup()">Join a Game</button>
+      </div>
+      <div class="resume-box" id="resume-box" hidden></div>
+    </div>
+
+    <div id="setup-panel" class="panel" style="display:none; margin-top: 32px; max-width: 620px;">
+      <h2 class="panel-title">Join a Game</h2>
+      <p class="panel-desc">Get on a Teams call with your group. One person picks a four-letter word as the code and says it out loud. Everyone enters the same code and group size, then takes a different seat.</p>
+      <div class="input-group">
+        <label for="setup-name">Your Name</label>
+        <input type="text" id="setup-name" placeholder="Enter your name" maxlength="24" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label for="setup-code">Game Code</label>
+        <div class="code-row">
+          <input type="text" id="setup-code" placeholder="e.g. KITE" maxlength="4" autocomplete="off" oninput="onCodeInput(this)">
+          <button class="btn btn-secondary btn-sm" onclick="suggestCode()">Pick one</button>
+        </div>
+        <div class="field-hint">Any four letters. The code decides how the deck is dealt, so everyone in the group must use the same one.</div>
+      </div>
+      <div class="setup-grid">
+        <div class="input-group">
+          <label>Group Size</label>
+          <div class="chip-row" id="size-chips"></div>
+        </div>
+        <div class="input-group">
+          <label>Your Seat</label>
+          <div class="chip-row" id="seat-chips"></div>
+          <div class="field-hint">Call out your seat on the call. No two people can share one.</div>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <div class="toggle-label">Team Mode</div>
+          <div class="toggle-desc">Include questions designed for teammates who already work together</div>
+        </div>
+        <button class="toggle" id="team-toggle" onclick="this.classList.toggle('on');renderDeckCheck()" aria-label="Toggle team mode"></button>
+      </div>
+      <div class="deck-check" id="deck-check"></div>
+      <div style="margin-top: 24px; display: flex; gap: 12px;">
+        <button class="btn btn-primary" style="flex:1" onclick="startGame()">Deal My Hand</button>
+        <button class="btn btn-ghost" onclick="hideSetup()">Cancel</button>
+      </div>
+    </div>
+
+    <section class="about" aria-labelledby="about-why">
+      <div>
+        <h2 class="about-title" id="about-why">Why we made this</h2>
+        <p>Common Ground came out of the first FutureWorks Lab pilot at SAP Labs U.S., where we designed and tested a range of workplace connection activities with early-career employees across the U.S.</p>
+        <p>Of everything we tried, <strong>self-disclosure activities worked best</strong>, both in person and virtually. These are structured prompts that invite people to share their own thoughts, feelings, and stories, which builds trust quickly. This game organizes those prompts around SAP&rsquo;s four GROWTH behaviors.</p>
+      </div>
+      <div>
+        <h2 class="about-title">What the research shows</h2>
+        <p>In a classic study by Aron and colleagues (1997), strangers who spent 45 minutes on escalating self-disclosure questions reached roughly 82% of the closeness people feel toward their closest relationship.</p>
+        <p>Our pilot found a similar result: self-disclosure activities drove <strong>significantly more relationship growth</strong> than comparable task- and play-based activities, moving participants up about two levels on a relationship closeness scale on average, for example from stranger to friendly acquaintance, or from acquaintance to work friend.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- Intro -->
+  <div id="screen-intro" class="screen">
+    <div class="intro-wrap">
+      <div class="intro-step active">
+        <div style="font-size:14px; font-weight:600; color:var(--blue-6); letter-spacing:0.06em; text-transform:uppercase;">Common Ground</div>
+        <h2>Building Connections Through Conversation</h2>
+        <p>These questions are adapted from Arthur Aron's "Fast Friends" procedure, a research-backed method for building interpersonal connection. We've reworked the format for the workplace, organized around SAP's four GROWTH behaviors.</p>
+      </div>
+      <div class="intro-step">
+        <div style="font-size:14px; font-weight:600; color:var(--blue-6); letter-spacing:0.06em; text-transform:uppercase;">The Four Behaviors</div>
+        <h2>GROWTH at SAP</h2>
+        <div class="intro-categories">
+          <div class="intro-cat cat-curiosity">
+            <div class="intro-cat-name" style="color:var(--rasp-7);">We Embrace Curiosity</div>
+            <div class="intro-cat-desc">Strive to get better every day with a passion for self-development.</div>
+          </div>
+          <div class="intro-cat cat-charge">
+            <div class="intro-cat-name" style="color:var(--mango-7);">We Take Charge</div>
+            <div class="intro-cat-desc">Take ownership of your actions, focusing on meaningful outcomes.</div>
+          </div>
+          <div class="intro-cat cat-transparency">
+            <div class="intro-cat-name" style="color:var(--indigo-7);">We Act with Transparency</div>
+            <div class="intro-cat-desc">Communicating openly, always acting with integrity and respect.</div>
+          </div>
+          <div class="intro-cat cat-win">
+            <div class="intro-cat-name" style="color:var(--green-7);">We Win as One</div>
+            <div class="intro-cat-desc">Harness collective capability to deliver winning results.</div>
+          </div>
+        </div>
+      </div>
+      <div class="intro-step">
+        <div style="font-size:14px; font-weight:600; color:var(--blue-6); letter-spacing:0.06em; text-transform:uppercase;">How To Play</div>
+        <h2>Your hand is yours alone</h2>
+        <div class="intro-flow grid">
+          <div class="intro-flow-item">
+            <div class="intro-flow-num">1</div>
+            <div>
+              <div class="intro-flow-title">Hold</div>
+              <div class="intro-flow-desc">You hold four questions, one from each GROWTH behavior, plus a twist card. Nobody else in your group holds the same questions.</div>
+            </div>
+          </div>
+          <div class="intro-flow-item">
+            <div class="intro-flow-num">2</div>
+            <div>
+              <div class="intro-flow-title">Take turns</div>
+              <div class="intro-flow-desc">Go around by seat number. On your turn, pick a question from your hand, read it aloud and answer first.</div>
+            </div>
+          </div>
+          <div class="intro-flow-item">
+            <div class="intro-flow-num">3</div>
+            <div>
+              <div class="intro-flow-title">Respond</div>
+              <div class="intro-flow-desc">Others can ask a follow-up, share their own answer, or say what part of your answer they connected with most.</div>
+            </div>
+          </div>
+          <div class="intro-flow-item">
+            <div class="intro-flow-num">4</div>
+            <div>
+              <div class="intro-flow-title">Reflect</div>
+              <div class="intro-flow-desc">Play until everyone has taken three or four turns, or until time runs out, then wrap up with a short reflection.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="intro-step">
+        <div style="font-size:14px; font-weight:600; color:var(--blue-6); letter-spacing:0.06em; text-transform:uppercase;">Twist Cards</div>
+        <h2>Shake up the conversation</h2>
+        <p>Every two questions you lead earns you a twist card. Twists change <em>how</em> people share, never who wins. Keep yours hidden until the right moment.</p>
+        <div class="howto-twists" id="intro-twists"></div>
+      </div>
+      <div class="intro-dots" id="intro-dots"></div>
+      <button class="btn btn-primary" id="intro-next-btn" onclick="introNext()">Next</button>
+    </div>
+  </div>
+
+  <!-- Game -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <div>
+        <div class="game-title" id="game-title">Common Ground</div>
+        <div style="font-size:13px; color:var(--text-muted);" id="game-subtitle"></div>
+      </div>
+      <div class="game-meta" id="game-meta"></div>
+    </div>
+
+    <div class="guide-banner" id="guide-banner"></div>
+
+    <div class="drawn-section">
+      <div class="drawn-section-header">
+        <div class="drawn-section-title">Your Hand</div>
+        <div class="drawn-section-line"></div>
+        <div class="twist-meter" id="twist-meter"></div>
+      </div>
+      <div class="hand-sub" id="hand-sub"></div>
+      <div class="hand-grid" id="hand-grid"></div>
+    </div>
+
+    <div class="answered-section" id="played-section" hidden>
+      <div class="drawn-section-header" onclick="togglePlayed()" style="cursor:pointer;">
+        <div class="drawn-section-title">Played (<span id="played-count">0</span>)</div>
+        <div class="drawn-section-line"></div>
+        <button class="btn btn-ghost btn-sm" id="played-toggle-btn" onclick="event.stopPropagation();togglePlayed()">Show</button>
+      </div>
+      <div class="hand-grid played-list" id="played-grid" hidden></div>
+    </div>
+
+    <div style="text-align:center; margin-top: 40px;">
+      <button class="btn btn-secondary" onclick="showWrapUp()">Finish &amp; Reflect</button>
+    </div>
+  </div>
+
+  <!-- Wrap-up -->
+  <div id="screen-wrapup" class="screen">
+    <div class="wrapup-panel">
+      <div style="font-size:14px; font-weight:600; color:var(--green-6); letter-spacing:0.06em; text-transform:uppercase;">Activity Complete</div>
+      <h2>Great Conversations!</h2>
+      <p>Take a moment to reflect on the connections you've made.</p>
+      <div class="wrapup-stats" id="wrapup-stats"></div>
+      <div class="input-group" style="text-align:left;">
+        <label for="wrapup-reflection">Your Reflection</label>
+        <textarea id="wrapup-reflection" placeholder="What stood out to you? What did you learn about your colleagues?" maxlength="500" oninput="saveReflectionDraft()"></textarea>
+        <div class="field-hint">Copy it and paste it into the Teams meeting chat so the group can read everyone's.</div>
+      </div>
+      <div class="wrap-actions">
+        <button class="btn btn-primary" onclick="copyReflection()">Copy for Teams Chat</button>
+        <button class="btn btn-ghost" onclick="backToHand()">Back to My Hand</button>
+      </div>
+      <div class="wrapup-shared led-list" id="led-list" hidden></div>
+      <div style="margin-top: 32px;">
+        <button class="btn btn-danger-outline btn-sm" onclick="newGame()">Start a New Game</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="focus-overlay" hidden onclick="if(event.target===this)closeFocus()"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ── Data ─────────────────────────────────────────────── */
+
+const CATEGORIES = {
+  curiosity: {
+    id: 'curiosity', name: 'We Embrace Curiosity', shortName: 'Curiosity',
+    desc: 'Strive to get better every day with a passion for self-development.',
+    cssClass: 'cat-curiosity',
+    regular: [
+      'Given the choice of anyone in the world, whom would you want as a dinner guest?',
+      'What would constitute a "perfect" day for you?',
+      'When did you last sing to yourself? To someone else?',
+      'If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you want?',
+      'If a crystal ball could tell you the truth about yourself, your life, the future, or anything else, what would you want to know?',
+      "What's one thing you wish you'd learned or experienced earlier in life?",
+      'If you could wake up tomorrow having gained any one quality or ability, what would it be?',
+      'What is your most treasured memory?',
+      'What did you want to be when you were twelve?',
+      "What's something you've recently gotten curious about (at work or outside of it)?",
+      "What's a topic or skill you know nothing about but would love to explore?",
+      "Who's someone outside your field whose work or thinking inspires you?",
+      "What's something you've learned from someone much younger or much older than you?",
+      'When was the last time you tried something completely new? How did it go?'
+    ],
+    team: [
+      "What's something you're good at that most people on the team probably don't know about?",
+      "What's something you wish you'd known on your first day at SAP?",
+      "What's the most useful thing a manager or mentor has ever said to you?",
+      'If you could do a fellowship on any team, which would it be and why?'
+    ]
+  },
+  charge: {
+    id: 'charge', name: 'We Take Charge', shortName: 'Take Charge',
+    desc: 'Take ownership of own actions and results, focusing on delivering meaningful outcomes with a sense of urgency.',
+    cssClass: 'cat-charge',
+    regular: [
+      'Would you like to be famous? In what way?',
+      "Do you have a gut feeling about where you'll be in ten years?",
+      "Is there something you've dreamed of doing for a long time? Why haven't you done it?",
+      'What is the greatest accomplishment of your life?',
+      "If you knew your life was going to change dramatically in a year, what would you want to do or change before then?",
+      "What's the most unexpected job you've ever had?",
+      "What's one thing on your plate right now that you feel genuine ownership over?",
+      "What's a small win you've had recently that you haven't told anyone about?",
+      'If you could take on any challenge at SAP for the next six months, what would it be?',
+      "What's a decision you made early in your career that you'd make differently now (or exactly the same)?"
+    ],
+    team: [
+      'What drew you to this kind of work in the first place? Is it the same thing that keeps you here?',
+      "What's something you've changed your mind about during your career?",
+      'What or whose advice do you refer to when making a career decision at work?',
+      "What's a project or task you've worked on here that you're proud of?",
+      "What's a skill or interest you have that this team hasn't tapped into yet?"
+    ]
+  },
+  transparency: {
+    id: 'transparency', name: 'We Act with Transparency', shortName: 'Transparency',
+    desc: 'Communicating openly and constructively, always acting with integrity, respect, and in the highest ethical manner.',
+    cssClass: 'cat-transparency',
+    regular: [
+      "Before making a phone call, do you ever rehearse what you're going to say? Why?",
+      'For what in your life do you feel most grateful?',
+      "What's a challenge or setback you've faced that shaped who you are today?",
+      "What's something that never fails to move you?",
+      "What's something you've been meaning to tell someone but haven't yet? What's held you back?",
+      'If you were going to become close friends with the people in your group, what would be important for them to know about you?',
+      "Share a challenge you're currently navigating and ask the group for their perspective.",
+      "What's a piece of feedback you received that was hard to hear but ultimately made you better?",
+      'What does "acting with integrity" look like in your day-to-day work?'
+    ],
+    team: [
+      "What's something about how you work that you wish people understood earlier when they start working with you?",
+      "When you're having a great day at work, what does that usually look like?",
+      "What's one thing you wish were more openly discussed on the team?",
+      "What's something you think this team does well that you'd want other teams to know about?"
+    ]
+  },
+  win: {
+    id: 'win', name: 'We Win as One', shortName: 'Win as One',
+    desc: 'Harness our collective capability across the organization to deliver winning results for our customers and SAP.',
+    cssClass: 'cat-win',
+    regular: [
+      'Name three things everyone in your group appears to have in common.',
+      'What do you value most in a friendship?',
+      'What does friendship mean to you?',
+      'What role do close relationships play in your life?',
+      "What's a tradition or value from your upbringing that's stuck with you?",
+      'Who has been the most influential person in your life, and why?',
+      'Complete this sentence: "I wish I had someone with whom I could share…"',
+      'Take two minutes and share a brief version of your life story with the group.',
+      "What's a time someone you collaborated with made your work better?",
+      "How do you like to celebrate wins (your own and your team's)?",
+      "What's something a friend or colleague has done for you that you still think about?"
+    ],
+    team: [
+      "What's a strength you see in this group that you think we underuse?",
+      'If you could swap roles with anyone on this team for a day, whose would you pick and why?',
+      "What's a work habit or trick you've picked up from a colleague?",
+      'If our team had a motto, what should it be?',
+      "When you think about a well organized project that you've been part of, what made it work?",
+      'What makes you feel connected to colleagues that work remotely or in different time zones?'
+    ]
+  }
+};
+
+const CAT_ORDER = ['curiosity', 'charge', 'transparency', 'win'];
+
+const TWISTS = {
+  'pass-mic':  { name: 'Pass the Mic', when: 'turn',
+    text: 'Read one of your questions aloud, then choose someone else to answer it first. You answer last.',
+    tips: ['Pick someone you’d genuinely like to hear from.', 'Then play that question from your hand as usual.'] },
+  'everyone':  { name: 'Everyone Answers', when: 'turn',
+    text: 'Read one of your questions aloud. Everyone answers it, going around in seat order.',
+    tips: ['Keep answers short so everyone gets a go.', 'Then play that question from your hand as usual.'] },
+  'lightning': { name: 'Lightning Round', when: 'turn', timer: 30,
+    text: 'Everyone picks any question from their own hand and answers it in 30 seconds or less.',
+    tips: ['Go in seat order, starting with you.', 'Everyone plays the card they answered, so it leaves their hand.'] },
+  'show-tell': { name: 'Show & Tell', when: 'turn',
+    text: 'Answer one of your questions while showing something within arm’s reach on camera.',
+    tips: ['A mug, a photo, a plant: anything with a story.', 'Anyone else can join in with an object of their own.'] },
+  'you-choose':{ name: 'You Choose for Me', when: 'turn',
+    text: 'Read two questions from your hand aloud. The group picks which one you answer.',
+    tips: ['Play the chosen card. The other one stays in your hand.'] },
+  'hot-seat':  { name: 'Hot Seat', when: 'turn',
+    text: 'Everyone else reads one question from their hand for you. Pick the one you’d most like to answer.',
+    tips: ['This twist is your whole turn, so you don’t play a question.', 'Their cards stay in their hands.'] },
+  'follow-up': { name: 'Follow-Up', when: 'any',
+    text: 'Play while someone else is answering. When they finish, ask them one follow-up question of your own.',
+    tips: ['Curious questions work best: “What was that like?” or “What happened next?”'] },
+  'me-too':    { name: 'Me Too', when: 'any',
+    text: 'Play when someone says something you relate to. Share your own version in a minute or two.',
+    tips: ['Build on their story rather than topping it.'] },
+  'one-word':  { name: 'One Word First', when: 'any',
+    text: 'Play right after someone reads a question. Everyone answers it in a single word first, then the reader answers in full.',
+    tips: ['Go around in seat order for the one-word round.'] },
+  'rewind':    { name: 'Rewind', when: 'any',
+    text: 'Ask anyone to answer a question from earlier today that they didn’t get to answer.',
+    tips: ['Great for bringing in someone who’s been quiet.'] }
+};
+const TWIST_IDS = Object.keys(TWISTS);
+
+const HAND_QUESTIONS = 4;   // questions kept in hand
+const MAX_TWISTS = 2;       // twists kept in hand
+const EARN_EVERY = 2;       // questions led per twist earned
+const MAX_SIZE = 6;
+const STORE_KEY = 'commonground-private-v1';
+
+const CODE_WORDS = ['KITE','MOON','FERN','JAZZ','LAMP','TACO','WAVE','BOLT','PEAR','NEST','DUNE','GLOW','HIVE','JADE','LIME','MINT','OPAL','PINE','REEF','SAGE','TIDE','VINE','WREN','ZEST','COVE','DOVE','FIGS','HARP','IRIS','LARK'];
+const CHECK_ADJ = ['Coral','Amber','Violet','Jade','Cobalt','Ruby','Saffron','Teal','Plum','Sage','Golden','Silver'];
+const CHECK_ANIMAL = ['Otter','Heron','Fox','Lynx','Panda','Gecko','Robin','Bison','Koala','Puffin','Marten','Ibis'];
+const CHECK_COLORS = ['#DF1278','#E76500','#5D36FF','#188918','#0070F2','#71014B','#C35500','#1B90FF','#7858FF','#36A41D','#C35500','#475E77'];
+
+const ICON_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
+const ICON_SWAP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>';
+const ICON_TWIST = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7h11a4 4 0 010 8H9"/><polyline points="12 12 9 15 12 18"/><path d="M20 17H9"/></svg>';
+
+/* ── Utilities ────────────────────────────────────────── */
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  document.getElementById('brandbar').hidden = (id === 'landing');
+  window.scrollTo(0, 0);
+}
+function hexSVG(color, size) {
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" fill="' + color + '"/></svg>';
+}
+function store(obj) { try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); } catch (e) {} }
+function load() { try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { return null; } }
+function wipe() { try { localStorage.removeItem(STORE_KEY); } catch (e) {} }
+
+/* ── Seeded randomness ───────────────────────────────────
+   Every device that enters the same code, group size and
+   team setting builds the exact same shuffled deck, then
+   keeps only its own seat's share. No server needed.      */
+
+function xmur3(str) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return function () {
+    h = Math.imul(h ^ (h >>> 16), 2246822507);
+    h = Math.imul(h ^ (h >>> 13), 3266489909);
+    return (h ^= h >>> 16) >>> 0;
+  };
+}
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function rngFor(str) { return mulberry32(xmur3(str)()); }
+function shuffle(arr, rng) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function deckBase(code, size, team) { return code.toUpperCase() + '|' + size + '|' + (team ? 'T' : 'R'); }
+
+function questionById(id) {
+  const [cat, kind, idx] = id.split('-');
+  const list = kind === 't' ? CATEGORIES[cat].team : CATEGORIES[cat].regular;
+  return { id, kind: 'q', category: cat, isTeam: kind === 't', num: (kind === 't' ? 'T' : '#') + (+idx + 1), question: list[+idx] };
+}
+function twistById(id) {
+  const type = id.split(':')[1];
+  return Object.assign({ id, kind: 't', type }, TWISTS[type]);
+}
+function cardById(id) { return id.startsWith('tw:') ? twistById(id) : questionById(id); }
+
+function buildStreams(cfg) {
+  const base = deckBase(cfg.code, cfg.size, cfg.team);
+  const mine = (_, j) => j % cfg.size === cfg.seat - 1;
+  // 1. Each category is shuffled identically on every device, then dealt round-robin by seat.
+  const piles = {};
+  CAT_ORDER.forEach(cat => {
+    const c = CATEGORIES[cat];
+    let ids = c.regular.map((_, i) => cat + '-r-' + i);
+    if (cfg.team) ids = ids.concat(c.team.map((_, i) => cat + '-t-' + i));
+    piles[cat] = shuffle(ids, rngFor(base + '|' + cat)).filter(mine);
+  });
+  // 2. Personal draw order: one card from each category per lap, lap order shuffled.
+  const prng = rngFor(base + '|seat' + cfg.seat);
+  const questions = [];
+  while (CAT_ORDER.some(c => piles[c].length)) {
+    shuffle(CAT_ORDER, prng).forEach(c => { if (piles[c].length) questions.push(piles[c].shift()); });
+  }
+  // 3. Twists: a shared shuffled sequence dealt round-robin, so seats start with different twists.
+  const trng = rngFor(base + '|twists');
+  let shared = [];
+  while (shared.length < cfg.size * 8) shared = shared.concat(shuffle(TWIST_IDS, trng));
+  const twists = shared.filter(mine).map((t, k) => 'tw:' + t + ':' + k);
+  return { questions, twists };
+}
+
+function deckCheck(code, size, team) {
+  const r = rngFor(deckBase(code, size, team) + '|check');
+  const a = Math.floor(r() * CHECK_ADJ.length), b = Math.floor(r() * CHECK_ANIMAL.length);
+  return { name: CHECK_ADJ[a] + ' ' + CHECK_ANIMAL[b], color: CHECK_COLORS[a] };
+}
+
+/* ── State ────────────────────────────────────────────── */
+
+let setup = { size: 4, seat: null };
+let game = null;      // persisted
+let streams = null;   // derived from game.cfg
+let introStep = 0;
+let focus = null;     // { id, mode: 'view' | 'play' }
+let playedOpen = false;
+let timer = null;
+
+function save() { if (game) store(game); }
+
+/* ── Setup screen ─────────────────────────────────────── */
+
+function showSetup() {
+  document.getElementById('setup-panel').style.display = 'block';
+  renderSetupChips(); renderDeckCheck();
+  document.getElementById('setup-name').focus();
+}
+function hideSetup() { document.getElementById('setup-panel').style.display = 'none'; }
+function onCodeInput(el) {
+  el.value = el.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
+  renderDeckCheck();
+}
+function suggestCode() {
+  const el = document.getElementById('setup-code');
+  el.value = CODE_WORDS[Math.floor(Math.random() * CODE_WORDS.length)];
+  renderDeckCheck();
+}
+function setSize(n) { setup.size = n; if (setup.seat > n) setup.seat = null; renderSetupChips(); renderDeckCheck(); }
+function setSeat(n) { setup.seat = n; renderSetupChips(); }
+function renderSetupChips() {
+  let s = '';
+  for (let n = 2; n <= MAX_SIZE; n++) s += '<button class="chip' + (setup.size === n ? ' active' : '') + '" onclick="setSize(' + n + ')" aria-pressed="' + (setup.size === n) + '">' + n + '</button>';
+  document.getElementById('size-chips').innerHTML = s;
+  let t = '';
+  for (let n = 1; n <= setup.size; n++) t += '<button class="chip' + (setup.seat === n ? ' active' : '') + '" onclick="setSeat(' + n + ')" aria-pressed="' + (setup.seat === n) + '">' + n + '</button>';
+  document.getElementById('seat-chips').innerHTML = t;
+}
+function renderDeckCheck() {
+  const code = document.getElementById('setup-code').value;
+  const team = document.getElementById('team-toggle').classList.contains('on');
+  const el = document.getElementById('deck-check');
+  if (code.length !== 4) {
+    el.innerHTML = hexSVG('var(--border)', 34) + '<div><div class="deck-check-label">Deck check</div><div class="deck-check-desc">Enter a four-letter code to see your group’s deck name.</div></div>';
+    return;
+  }
+  const c = deckCheck(code, setup.size, team);
+  el.innerHTML = hexSVG(c.color, 34) + '<div><div class="deck-check-label">Deck check</div><div class="deck-check-name" style="color:' + c.color + '">' + c.name + '</div>' +
+    '<div class="deck-check-desc">Everyone in your group should see this same name. If yours is different, check the code, group size and Team Mode.</div></div>';
+}
+
+function startGame() {
+  const name = document.getElementById('setup-name').value.trim();
+  const code = document.getElementById('setup-code').value.trim().toUpperCase();
+  if (!name) { showToast('Please enter your name'); return; }
+  if (!/^[A-Z]{4}$/.test(code)) { showToast('The code needs exactly four letters'); return; }
+  if (!setup.seat) { showToast('Pick your seat number'); return; }
+  const cfg = { name, code, size: setup.size, seat: setup.seat, team: document.getElementById('team-toggle').classList.contains('on') };
+  streams = buildStreams(cfg);
+  game = {
+    cfg,
+    hand: streams.questions.slice(0, HAND_QUESTIONS).concat(streams.twists.slice(0, 1)),
+    qPtr: HAND_QUESTIONS, tPtr: 1,
+    played: [], swapped: [], led: 0, progress: 0, twistsPlayed: 0, reflection: ''
+  };
+  save();
+  introStep = 0;
+  showScreen('intro');
+  renderIntro();
+}
+
+function resumeGame() {
+  streams = buildStreams(game.cfg);
+  showScreen('game');
+  renderGame();
+}
+function newGame() {
+  if (!confirm('Start a new game? Your current hand will be cleared.')) return;
+  wipe(); game = null; streams = null;
+  document.getElementById('resume-box').hidden = true;
+  showScreen('landing');
+  showSetup();
+}
+
+/* ── Intro ────────────────────────────────────────────── */
+
+function renderIntro() {
+  const steps = document.querySelectorAll('.intro-step');
+  steps.forEach((el, i) => el.classList.toggle('active', i === introStep));
+  const dots = document.getElementById('intro-dots');
+  dots.innerHTML = '';
+  steps.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'intro-dot' + (i === introStep ? ' active' : '');
+    d.onclick = () => { introStep = i; renderIntro(); };
+    d.setAttribute('aria-label', 'Step ' + (i + 1));
+    dots.appendChild(d);
+  });
+  document.getElementById('intro-next-btn').textContent = introStep === steps.length - 1 ? 'See My Hand' : 'Next';
+  document.getElementById('intro-twists').innerHTML =
+    renderTwistHTML(twistById('tw:everyone:x'), { static: true }) + renderTwistHTML(twistById('tw:follow-up:x'), { static: true });
+}
+function introNext() {
+  const n = document.querySelectorAll('.intro-step').length;
+  if (introStep < n - 1) { introStep++; renderIntro(); }
+  else { showScreen('game'); renderGame(true); }
+}
+
+/* ── Game actions ─────────────────────────────────────── */
+
+function handQuestions() { return game.hand.filter(id => !id.startsWith('tw:')); }
+function handTwists() { return game.hand.filter(id => id.startsWith('tw:')); }
+function questionsLeft() { return streams.questions.length - game.qPtr; }
+
+function drawQuestion() {
+  if (game.qPtr >= streams.questions.length) return null;
+  const id = streams.questions[game.qPtr++];
+  game.hand.push(id);
+  return id;
+}
+function maybeEarnTwist() {
+  if (game.progress < EARN_EVERY) return null;
+  if (handTwists().length >= MAX_TWISTS) return null;
+  if (game.tPtr >= streams.twists.length) return null;
+  const id = streams.twists[game.tPtr++];
+  game.hand.push(id);
+  game.progress = 0;
+  return id;
+}
+function removeFromHand(id) { game.hand = game.hand.filter(h => h !== id); }
+
+function completeCard(id) {
+  if (!game.hand.includes(id)) return;
+  const card = cardById(id);
+  removeFromHand(id);
+  game.played.push(id);
+  stopTimer();
+  let msg;
+  let earned = null;
+  if (card.kind === 'q') {
+    game.led++;
+    game.progress = Math.min(EARN_EVERY, game.progress + 1);
+    const drew = drawQuestion();
+    earned = maybeEarnTwist();
+    msg = drew ? 'New card drawn' : 'Your deck is empty';
+  } else {
+    game.twistsPlayed++;
+    earned = maybeEarnTwist();
+    msg = 'Twist played';
+  }
+  if (earned) msg = 'You earned a twist: ' + TWISTS[earned.split(':')[1]].name;
+  save();
+  closeFocus();
+  renderGame();
+  if (earned) flashCard(earned); else flashCard(game.hand[game.hand.length - 1]);
+  showToast(msg);
+}
+
+function swapCard(id) {
+  if (questionsLeft() <= 0) { showToast('No cards left in your deck to swap in'); return; }
+  removeFromHand(id);
+  game.swapped.push(id);
+  const drew = drawQuestion();
+  save();
+  closeFocus();
+  renderGame();
+  flashCard(drew);
+  showToast('Swapped for a new question');
+}
+
+let flashId = null;
+function flashCard(id) {
+  flashId = id;
+  const el = document.querySelector('[data-id="' + CSS.escape(id || '') + '"]');
+  if (el) el.classList.add('q-card-enter');
+}
+
+/* ── Focus / play view ────────────────────────────────── */
+
+function openCard(id, mode) { focus = { id, mode: mode || 'view' }; renderFocus(); }
+function closeFocus() {
+  focus = null; stopTimer();
+  document.getElementById('focus-overlay').hidden = true;
+}
+function renderFocus() {
+  const ov = document.getElementById('focus-overlay');
+  if (!focus) { ov.hidden = true; return; }
+  const card = cardById(focus.id);
+  const playing = focus.mode === 'play';
+  let header, body, actions;
+  const close = '<button class="focus-close" onclick="closeFocus()" aria-label="Close">' + ICON_X + '</button>';
+
+  if (card.kind === 'q') {
+    const cat = CATEGORIES[card.category];
+    header = '<div class="focus-header ' + cat.cssClass + '"><span class="focus-cat">' + cat.shortName + '</span><span class="focus-num">' + card.num + '</span>' +
+      (card.isTeam ? '<span class="focus-team-badge">Team</span>' : '') + close + '</div>';
+    body = '<div class="focus-body">' +
+      (playing ? '<div class="spot-label">Your turn: read it aloud and answer first</div>' : '') +
+      '<div class="focus-question">' + esc(card.question) + '</div>' +
+      (playing
+        ? '<ul class="spot-tips"><li>Others can ask a follow-up, share their own answer, or say what part of yours they connected with most.</li>' +
+          '<li>Holding an <strong>Anytime</strong> twist? Anyone can play one during your turn.</li>' +
+          '<li>It’s always fine to pass. Tap <strong>Not yet</strong>, then swap this card out.</li></ul>'
+        : '<div class="focus-meta">' + cat.name + '</div>') +
+      '</div>';
+    actions = playing
+      ? '<div class="focus-actions discuss"><button class="btn btn-ghost btn-sm" onclick="openCard(\'' + card.id + '\')">Not yet</button>' +
+        '<button class="btn btn-success" onclick="completeCard(\'' + card.id + '\')">' + ICON_CHECK.replace('<svg', '<svg width="18" height="18"') + ' Done, draw a new card</button></div>'
+      : '<div class="focus-actions discuss"><button class="btn btn-ghost btn-sm" onclick="swapCard(\'' + card.id + '\')">' + ICON_SWAP.replace('<svg', '<svg width="16" height="16"') + ' Swap it out</button>' +
+        '<button class="btn btn-primary" onclick="openCard(\'' + card.id + '\',\'play\')">Play This Card</button></div>';
+  } else {
+    header = '<div class="focus-header twist"><span class="focus-cat">' + ICON_TWIST.replace('<svg', '<svg width="16" height="16" style="vertical-align:-3px;margin-right:6px"') + 'Twist</span>' +
+      '<span class="focus-team-badge">' + (card.when === 'turn' ? 'Your turn' : 'Anytime') + '</span>' + close + '</div>';
+    body = '<div class="focus-body">' +
+      (playing ? '<div class="spot-label">Announce it to the group</div>' : '') +
+      '<div class="focus-twist-name">' + esc(card.name) + '</div>' +
+      '<div class="focus-question" style="font-size:18px">' + esc(card.text) + '</div>' +
+      (playing ? '<ul class="spot-tips">' + card.tips.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>' : '') +
+      (playing && card.timer ? '<div class="timer"><div class="timer-num" id="timer-num">' + card.timer + '</div>' +
+        '<button class="btn btn-secondary btn-sm" id="timer-btn" onclick="startTimer(' + card.timer + ')">Start 30s timer</button></div>' : '') +
+      (!playing ? '<div class="focus-meta">' + (card.when === 'turn'
+          ? 'Play this at the start of your own turn.'
+          : 'Play this at any point, including during someone else’s turn.') + '</div>' : '') +
+      '</div>';
+    actions = playing
+      ? '<div class="focus-actions discuss"><button class="btn btn-ghost btn-sm" onclick="openCard(\'' + card.id + '\')">Not yet</button>' +
+        '<button class="btn btn-success" onclick="completeCard(\'' + card.id + '\')">' + ICON_CHECK.replace('<svg', '<svg width="18" height="18"') + ' Done</button></div>'
+      : '<div class="focus-actions discuss"><span class="focus-hint">Twists stay secret until you play them.</span>' +
+        '<button class="btn btn-primary" onclick="openCard(\'' + card.id + '\',\'play\')">Play This Twist</button></div>';
+  }
+  ov.innerHTML = '<div class="focus-card" role="dialog" aria-modal="true">' + header + body + actions + '</div>';
+  ov.hidden = false;
+}
+
+function startTimer(sec) {
+  stopTimer();
+  let left = sec;
+  const num = document.getElementById('timer-num');
+  const btn = document.getElementById('timer-btn');
+  if (!num) return;
+  num.classList.remove('done'); num.textContent = left;
+  btn.textContent = 'Restart';
+  timer = setInterval(() => {
+    left--;
+    const n = document.getElementById('timer-num');
+    if (!n) { stopTimer(); return; }
+    n.textContent = Math.max(left, 0);
+    if (left <= 0) { n.classList.add('done'); n.textContent = 'Time!'; stopTimer(); }
+  }, 1000);
+}
+function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+
+/* ── Rendering ────────────────────────────────────────── */
+
+function renderQuestionHTML(card, opts) {
+  const cat = CATEGORIES[card.category];
+  const played = opts && opts.played;
+  return '<div class="q-card ' + cat.cssClass + '" data-id="' + card.id + '"' +
+    (played ? '' : ' tabindex="0" role="button" onclick="openCard(\'' + card.id + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openCard(\'' + card.id + '\')}"') + '>' +
+    '<div class="q-card-header"><span class="q-card-cat">' + cat.shortName + '</span><span class="q-card-num">' + card.num + '</span>' +
+    (card.isTeam ? '<span class="q-card-team-badge">Team</span>' : '') + '</div>' +
+    '<div class="q-card-body"><div class="q-card-question">' + esc(card.question) + '</div></div>' +
+    '<div class="q-card-footer">' +
+      (played ? '<span class="answered-badge">' + ICON_CHECK + ' Played</span>'
+              : '<span class="q-play-hint">Tap to play</span><div class="q-card-actions"><button class="q-action" title="Swap for a new question" aria-label="Swap for a new question" onclick="event.stopPropagation();swapCard(\'' + card.id + '\')">' + ICON_SWAP + '</button></div>') +
+    '</div></div>';
+}
+
+function renderTwistHTML(card, opts) {
+  const isStatic = opts && (opts.static || opts.played);
+  const hexes = '<div class="t-card-hexes"><span style="right:-18px;top:-14px">' + hexSVG('#89D1FF', 80) + '</span><span style="right:40px;bottom:-26px">' + hexSVG('#B894FF', 56) + '</span></div>';
+  return '<div class="t-card" data-id="' + card.id + '"' +
+    (isStatic ? '' : ' tabindex="0" role="button" onclick="openCard(\'' + card.id + '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openCard(\'' + card.id + '\')}"') + '>' +
+    hexes +
+    '<div class="t-card-top"><span class="t-card-label">' + ICON_TWIST + 'Twist</span>' +
+    '<span class="t-when ' + card.when + '">' + (card.when === 'turn' ? 'Your turn' : 'Anytime') + '</span></div>' +
+    '<div class="t-card-body"><div class="t-card-name">' + esc(card.name) + '</div><div class="t-card-text">' + esc(card.text) + '</div></div>' +
+  '</div>';
+}
+
+function renderCardHTML(id, opts) {
+  const c = cardById(id);
+  return c.kind === 'q' ? renderQuestionHTML(c, opts) : renderTwistHTML(c, opts);
+}
+
+function renderGame(animateAll) {
+  const cfg = game.cfg;
+  const check = deckCheck(cfg.code, cfg.size, cfg.team);
+  document.getElementById('game-title').textContent = cfg.name + '’s Hand';
+  document.getElementById('game-subtitle').textContent = cfg.team ? 'Team Mode' : 'Common Ground';
+  document.getElementById('game-meta').innerHTML =
+    '<span class="meta-chip">Code <strong>' + esc(cfg.code) + '</strong></span>' +
+    '<span class="meta-chip">Seat <strong>' + cfg.seat + '</strong> of ' + cfg.size + '</span>' +
+    '<span class="meta-chip" title="Everyone in your group should see this deck name">' + hexSVG(check.color, 14) + check.name + '</span>';
+
+  let order = '';
+  for (let n = 1; n <= cfg.size; n++) {
+    order += '<span class="turn-seat' + (n === cfg.seat ? ' me' : '') + '"' + (n === cfg.seat ? ' title="You"' : '') + '>' + n + '</span>';
+    if (n < cfg.size) order += '<span class="turn-arrow" aria-hidden="true">&rarr;</span>';
+  }
+  const turnsLed = game.led;
+  document.getElementById('guide-banner').innerHTML =
+    '<div class="guide-step-label">How a turn works</div>' +
+    '<div class="guide-title">' + (turnsLed === 0 ? (cfg.seat === 1 ? 'You go first.' : 'Seat 1 goes first.') + ' Then go around by seat.' : 'Keep going around by seat.') + '</div>' +
+    '<div class="guide-desc">On your turn, tap a question, read it aloud and answer first. If none of your cards feel right, swap one out. Hold onto <strong>Anytime</strong> twists for someone else’s turn.</div>' +
+    '<div class="turn-order" aria-label="Turn order">' + order + '</div>';
+
+  let pips = '';
+  for (let i = 0; i < EARN_EVERY; i++) pips += '<span class="twist-pip' + (i < game.progress ? ' on' : '') + '"></span>';
+  const full = handTwists().length >= MAX_TWISTS;
+  const label = full ? 'Twist slots full' : (game.progress >= EARN_EVERY ? 'Twist ready' : 'Next twist');
+  document.getElementById('twist-meter').innerHTML = '<span>' + label + '</span>' + pips;
+
+  const ql = questionsLeft();
+  document.getElementById('hand-sub').textContent =
+    'Only you can see these. ' + (ql > 0 ? ql + ' question' + (ql !== 1 ? 's' : '') + ' left in your deck.' : 'Your deck is empty, so play what’s left in your hand.');
+
+  // Questions first, twists last.
+  const ordered = handQuestions().concat(handTwists());
+  const grid = document.getElementById('hand-grid');
+  grid.innerHTML = ordered.length
+    ? ordered.map(id => renderCardHTML(id)).join('')
+    : '<div class="empty-state"><div class="empty-state-text">You’ve played every card in your hand. Keep listening and responding, or finish and reflect.</div></div>';
+  if (animateAll) grid.querySelectorAll('.q-card, .t-card').forEach((el, i) => { el.style.animationDelay = (i * 60) + 'ms'; el.classList.add('q-card-enter'); });
+
+  const sec = document.getElementById('played-section');
+  sec.hidden = game.played.length === 0;
+  document.getElementById('played-count').textContent = game.played.length;
+  if (playedOpen) renderPlayed();
+}
+
+function togglePlayed() {
+  playedOpen = !playedOpen;
+  document.getElementById('played-grid').hidden = !playedOpen;
+  document.getElementById('played-toggle-btn').textContent = playedOpen ? 'Hide' : 'Show';
+  if (playedOpen) renderPlayed();
+}
+function renderPlayed() {
+  document.getElementById('played-grid').innerHTML = game.played.slice().reverse().map(id => renderCardHTML(id, { played: true })).join('');
+}
+
+/* ── Wrap-up ──────────────────────────────────────────── */
+
+function showWrapUp() {
+  showScreen('wrapup');
+  document.getElementById('wrapup-stats').innerHTML =
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + game.led + '</div><div class="wrapup-stat-label">Questions Led</div></div>' +
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + game.twistsPlayed + '</div><div class="wrapup-stat-label">Twists Played</div></div>' +
+    '<div class="wrapup-stat"><div class="wrapup-stat-num">' + game.swapped.length + '</div><div class="wrapup-stat-label">Swapped</div></div>';
+  document.getElementById('wrapup-reflection').value = game.reflection || '';
+  const led = game.played.filter(id => !id.startsWith('tw:')).map(questionById);
+  const list = document.getElementById('led-list');
+  list.hidden = led.length === 0;
+  list.innerHTML = '<div class="wrapup-shared-title">Questions you led</div>' +
+    led.map(q => '<div class="wrapup-shared-item"><span class="wrapup-shared-name">' + CATEGORIES[q.category].shortName + ':</span> ' + esc(q.question) + '</div>').join('');
+}
+function saveReflectionDraft() { game.reflection = document.getElementById('wrapup-reflection').value; save(); }
+function copyReflection() {
+  const text = document.getElementById('wrapup-reflection').value.trim();
+  if (!text) { showToast('Write a short reflection first'); return; }
+  const msg = 'Common Ground reflection from ' + game.cfg.name + ': ' + text;
+  const done = () => showToast('Copied. Paste it into the Teams chat');
+  const fallback = () => {
+    const ta = document.getElementById('wrapup-reflection');
+    const prev = ta.value; ta.value = msg; ta.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.value = prev;
+    ok ? done() : showToast('Couldn’t copy automatically. Select the text and copy it');
+  };
+  try { navigator.clipboard.writeText(msg).then(done, fallback); } catch (e) { fallback(); }
+}
+function backToHand() { showScreen('game'); renderGame(); }
+
+/* ── Keyboard & init ──────────────────────────────────── */
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && focus) closeFocus(); });
+
+(function init() {
+  game = load();
+  if (game && game.cfg && Array.isArray(game.hand)) {
+    const box = document.getElementById('resume-box');
+    box.innerHTML = 'You have a game in progress: <strong>' + esc(game.cfg.code) + '</strong>, seat ' + game.cfg.seat + ' of ' + game.cfg.size + '.<br>' +
+      '<button class="btn btn-secondary btn-sm" onclick="resumeGame()">Continue My Hand</button>';
+    box.hidden = false;
+  } else { game = null; }
+  renderSetupChips();
+})();
+</script>
+
